@@ -6,7 +6,7 @@ env:
 #uncommented push 
 on:
   #possibly comment this
-  workflow_dispatch
+  #workflow_dispatch
   push:
 
 jobs:
