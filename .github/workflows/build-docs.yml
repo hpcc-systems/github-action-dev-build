@@ -5,7 +5,8 @@ env:
   VCPKG_NUGET_REPOSITORY: "https://github.com/hpcc-systems/vcpkg"
 #uncommented push 
 on:
-  #workflow_dispatch
+  #possibly comment this
+  workflow_dispatch
   push:
 
 jobs:
