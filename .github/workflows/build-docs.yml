@@ -156,12 +156,15 @@ jobs:
           docker run --rm --mount ${{ needs.preamble.outputs.mount_platform }} --mount ${{ needs.preamble.outputs.mount_build }} ${{ steps.vars.outputs.docker_tag_candidate_base }} "cd /hpcc-dev/build/Release/docs/EN_US && zip ALL_HPCC_DOCS_EN_US-${{ needs.preamble.outputs.community_tag }}.zip *.pdf"
           docker run --rm --mount ${{ needs.preamble.outputs.mount_platform }} --mount ${{ needs.preamble.outputs.mount_build }} ${{ steps.vars.outputs.docker_tag_candidate_base }} "cd /hpcc-dev/build/Release/docs/PT_BR && zip ALL_HPCC_DOCS_PT_BR-${{ needs.preamble.outputs.community_tag }}.zip *.pdf"
 
-      - name: Upload Artifacts
+name: Upload Artifacts
         if: ${{ !matrix.ln && !matrix.container && matrix.documentation }}
         uses: actions/upload-artifact@v4
         with:
           name: html-help-documents
           path: |
+            ${{ needs.preamble.outputs.folder_build }}/Release/docs/*.zip
+            ${{ needs.preamble.outputs.folder_build }}/Release/docs/EN_US/*.zip
+            ${{ needs.preamble.outputs.folder_build }}/Release/docs/PT_BR/*.zip
             ${{ needs.preamble.outputs.folder_build }}/docs/EN_US/EclipseHelp/*.zip
             ${{ needs.preamble.outputs.folder_build }}/docs/EN_US/HTMLHelp/*.zip
             ${{ needs.preamble.outputs.folder_build }}/docs/PT_BR/HTMLHelp/*.zip
