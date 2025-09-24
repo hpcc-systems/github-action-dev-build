@@ -1,4 +1,8 @@
 # github-action-dev-build
+## Reference
+https://hpcc-systems.github.io/HPCC-Platform/devdoc/UserBuildAssets.html
+
+## General
 Build individual HPCC-Platform Project Artifacts with Github Actions for unit testing and integration testing of any docs code changes. 
 This respository is a means to build specified Github branches/tags/commits etc
 
@@ -33,6 +37,19 @@ You need to set up the secrets on your (clone) of the GitHub action-build reposi
 10. Enter **DOCKERHUB_PASSWORD** in the Name field.
 11. Enter your Dockerhub account password into the Secret field.
 12. Press **Add Secret** button to create and store that secret
+
+Also need create secret LNB_TOKEN for LN repository access.
+
+### Create Certificates and Secrets
+Follow https://hpcc-systems.github.io/HPCC-Platform/devdoc/UserBuildAssets.html to create certificates
+As previous instructed create following secrets
+```code
+SIGNING_CERTIFICATE
+SIGNING_CERTIFICATE_PASSPHRASE
+SIGNING_SECRET
+SIGN_MODULES_KEYID
+SIGN_MODULES_PASSPHRASE
+```
 
 ## Configuring Building from your Repo
 To configure for builds you need to tell it what you want to build, and when. These are the steps in order to do that. first you will need to get your community ref value for the build script. The community ref value referred to is the Git REF value for the git object -commit, branch, tag, etc. that you want to build. For example if you wanted to test your branch that you just created, you need to get that value for the community REF. 
@@ -76,8 +93,6 @@ To use this clone this repo to your Github account, pick a github action script 
 Replace the <GIT REF> for the HPCC-Platform/LN/ECLIDE branch. You also can replace GITHUB_ACCOUNT if users
 want to build with other Github account.
 Users can modify the CMake options as they wish
-
-Requirement: following Michael's instruction to create SECRETS.
 
 To trigger a build automatically uncommts push and disable workflow_dispatch:
 ```code
@@ -127,6 +142,9 @@ COMMUNITY_REF:  <GIT CE REF>
 LN_REF:  <GIT LN REF>
 ```
 The default artifact file name: LN-Packages-<os>.zip
+Currently only tested Ubuntu and RockyLinux. CentOS-7, which is out of support, is no more working.
+
+There is build-ln.yml which include both LN Platform and Clienttools build
 
 ### Windows and OSX Community/LN Clienttools
 Get LN and Platform git reference
