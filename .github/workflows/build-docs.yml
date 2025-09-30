@@ -6,8 +6,8 @@ env:
 #uncommented push 
 on:
   #possibly comment this
-  #workflow_dispatch
-  push:
+  workflow_dispatch
+  #push:
 
 jobs:
   Test-hyperlinks:
@@ -20,7 +20,7 @@ jobs:
   preamble:
     name: Publish Release
     env:
-      #COMMUNITY_REF: "dc1cdacdbdda6e5ca1c5b836e130c2deb2d2fe62"
+      #COMMUNITY_REF: "4bfae642c51b5927f896739a1408adcea5362e3a"
       COMMUNITY_REF:  <GIT REF>
       GITHUB_ACCOUNT: ${{ github.repository_owner }}
     runs-on: ubuntu-22.04
@@ -63,7 +63,7 @@ jobs:
 
       - name: Print vars
         run: |
-          echo "${{ toJSON(steps.vars.outputs) }})"
+          echo "${{ toJSON(steps.vars.outputs) }}"
 
   build-docker:
     name: Build Docker
@@ -72,7 +72,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             name: docs
             documentation: true
       fail-fast: false
@@ -101,6 +101,8 @@ jobs:
         with:
           repository: ${{ needs.preamble.outputs.github_account }}/HPCC-Platform
           ref: ${{ needs.preamble.outputs.community_ref }}
+          fetch-depth: 0
+          fetch-tags: true
           submodules: recursive
           path: ${{ needs.preamble.outputs.folder_platform }}
 
@@ -122,20 +124,20 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Create Build Image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           builder: ${{ steps.buildx.outputs.name }}
-          file: ${{ needs.preamble.outputs.folder_platform }}/dockerfiles/vcpkg/${{ matrix.os }}.dockerfile
-          context: ${{ needs.preamble.outputs.folder_platform }}/dockerfiles/vcpkg
+          file: ${{ needs.preamble.outputs.folder_platform }}/dockerfiles/${{ matrix.os }}.dockerfile
+          context: ${{ needs.preamble.outputs.folder_platform }}/dockerfiles
           push: ${{ needs.preamble.outputs.github_account == 'hpcc-systems' }}
           load: ${{ needs.preamble.outputs.github_account != 'hpcc-systems' }}
           build-args: |
@@ -157,7 +159,7 @@ jobs:
       - name: CMake documentation (community)
         if: ${{ !matrix.ln && !matrix.ee && !matrix.container && matrix.documentation }}
         run: |
-          mkdir -p {${{needs.preamble.outputs.folder_build }},EN_US,PT_BR,vcpkg_downloads}
+          mkdir -p ${{needs.preamble.outputs.folder_build }} EN_US,PT_BR,vcpkg_downloads
           sudo rm -f ${{ needs.preamble.outputs.folder_build }}/CMakeCache.txt
           sudo rm -rf ${{ needs.preamble.outputs.folder_build }}/CMakeFiles
           docker run --rm --mount ${{ needs.preamble.outputs.mount_platform }} --mount ${{ needs.preamble.outputs.mount_build }} ${{ steps.vars.outputs.docker_tag_candidate_base }} "\

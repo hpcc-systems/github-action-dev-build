@@ -12,10 +12,10 @@ jobs:
   preamble:
     name: Publish Release
     env:
-      COMMUNITY_REF: "221c82d716c8acd016b409e3f8c20e84b70a74a1"
-      LN_REF:        "a4d0fdf699abfbf4331c59c4712163c25f6951e3"
-      #COMMUNITY_REF: <GIT REF>
-      #LN_REF: <GIT REF>
+      #COMMUNITY_REF: "4bfae642c51b5927f896739a1408adcea5362e3a"
+      #LN_REF:        "8888a9aac7374062e4d1d8b2eed7ff35c64370a6"
+      COMMUNITY_REF: <GIT REF>
+      LN_REF: <GIT REF>
       GITHUB_ACCOUNT: ${{ github.repository_owner }}
     runs-on: ubuntu-22.04
     permissions:
